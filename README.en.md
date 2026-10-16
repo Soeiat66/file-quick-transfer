@@ -88,6 +88,8 @@ Covers: home page, QR code, broadcast upload / download / auto-delete, folder zi
 
 [MIT](./LICENSE) © 2026 Soeiat66
 
-## AI-Assisted Creation Notice
+## Fully Open Source · AI-Created Notice
 
-This project was created with the assistance of AI: requirements analysis, architecture design, the core code (Go server and front end), the app icon, the test scripts and this documentation were all AI-assisted. The project owner is responsible for requirements definition, feature verification and release maintenance. When using or redistributing this project, please keep this notice.
+This project is **fully open source** (MIT License) and **entirely created by AI**: from requirements analysis, architecture design, core code (Go server and front end), UI design, app icon, test scripts and documentation, to the creation of the GitHub repository and the publishing of the code — everything was done independently by AI. The project owner only provided the requirements and authorization.
+
+If you find any issues or areas for improvement, you are very welcome to **discuss, remix and modify**. You can fork this project, file issues / PRs, or build your own version on top of it. When using or redistributing this project, please keep this notice.
