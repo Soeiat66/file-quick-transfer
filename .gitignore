@@ -1,0 +1,21 @@
+# ---- 运行时与临时数据 ----
+storage/
+
+# ---- Node.js 完整版遗留（本仓库仅发布 Go 单文件版源码）----
+node_modules/
+runtime/
+package.json
+package-lock.json
+server.js
+启动.bat
+
+# ---- 本地辅助测试脚本（不进仓库）----
+test-e2e.js
+ws-mini.js
+big-test.js
+
+# ---- 编译产物与 Windows 资源对象 ----
+文件快转.exe
+*.exe
+*.exe~
+rsrc_windows_amd64.syso
