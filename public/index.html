@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<title>文件快转 · 局域网文件互传</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════ 首页 ═══════════ -->
+  <section id="view-home" class="view">
+    <div class="hero">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#2563eb" aria-hidden="true">
+          <path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>
+        </svg>
+      </div>
+      <h1>文件快转</h1>
+      <p class="sub">同一网络下，多设备之间快速互传文件</p>
+      <div class="net-status" id="net-status">
+        <span class="dot"></span><span id="net-status-text">正在连接服务…</span>
+      </div>
+    </div>
+
+    <div class="qr-card">
+      <img id="qr-img" src="/api/qr" alt="手机扫码访问二维码" width="96" height="96">
+      <div class="qr-info">
+        <b>手机扫码直接打开</b>
+        <span>手机连接同一 WiFi 后，<br>用相机或浏览器扫一扫即可进入</span>
+      </div>
+    </div>
+
+    <div class="mode-cards">
+      <button class="mode-card send" data-go="send">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>
+        </svg>
+        <span class="mc-title">发送文件</span>
+        <span class="mc-desc">实时发送或生成端口码<br>点对点发送</span>
+      </button>
+      <button class="mode-card receive" data-go="receive">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/>
+        </svg>
+        <span class="mc-title">接收文件</span>
+        <span class="mc-desc">自动搜索在线设备<br>或输入端口码接收</span>
+      </button>
+    </div>
+
+    <div class="home-foot">
+      <div class="online-line">
+        <span class="dot"></span>
+        当前在线设备 <b id="online-count">0</b> 台
+      </div>
+      <div class="name-line">
+        <label for="device-name">我的设备名</label>
+        <input id="device-name" maxlength="30" placeholder="点击填写，如：客厅电脑 / 我的手机">
+      </div>
+      <p class="foot-hint">所有设备需连接同一网络（同一 WiFi）</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 发送页 ═══════════ -->
+  <section id="view-send" class="view hidden">
+    <header class="bar">
+      <button class="back" data-go="home" aria-label="返回">‹</button>
+      <h2>发送文件</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="send-live">实时发送</button>
+      <button class="tab" data-tab="send-room">点对点发送</button>
+    </div>
+
+    <!-- 实时发送 -->
+    <div id="send-live" class="tab-panel">
+      <p class="panel-tip">选择文件上传后，所有在线的接收端会实时收到并可直接下载。<br>也可以直接把文件或文件夹拖到这里。</p>
+      <div class="picker">
+        <button class="ghost" id="live-pick-files">＋ 选择文件</button>
+        <button class="ghost" id="live-pick-dir">＋ 选择文件夹</button>
+      </div>
+      <input type="file" id="live-files" multiple hidden>
+      <input type="file" id="live-dir" webkitdirectory multiple hidden>
+      <div id="live-selected" class="file-list"></div>
+      <button id="live-send" class="primary" disabled>发送给所有在线设备</button>
+      <div id="live-progress" class="progress hidden">
+        <div class="prog-bar"><div class="prog-fill"></div></div>
+        <span class="pct">0%</span>
+      </div>
+      <div id="live-done" class="done-list"></div>
+    </div>
+
+    <!-- 点对点发送 -->
+    <div id="send-room" class="tab-panel hidden">
+      <div id="room-start">
+        <p class="panel-tip">生成一个 4 位端口码，把端口码告诉对方。<br>对方在「接收文件 → 点对点接收」中输入端口码即可收到你的文件。<br>也可以直接把文件或文件夹拖到这里。</p>
+        <button id="room-create" class="primary big">生成端口码</button>
+      </div>
+      <div id="room-active" class="hidden">
+        <div class="room-code-box">
+          <span class="rc-label">我的端口码</span>
+          <b id="room-code-text">0000</b>
+          <span class="rc-hint">把端口码告诉对方</span>
+        </div>
+        <div class="picker">
+          <button class="ghost" id="room-pick-files">＋ 选择文件</button>
+          <button class="ghost" id="room-pick-dir">＋ 选择文件夹</button>
+        </div>
+        <input type="file" id="room-files" multiple hidden>
+        <input type="file" id="room-dir" webkitdirectory multiple hidden>
+        <div id="room-selected" class="file-list"></div>
+        <button id="room-send" class="primary" disabled>上传到该端口码</button>
+        <div id="room-progress" class="progress hidden">
+          <div class="prog-bar"><div class="prog-fill"></div></div>
+          <span class="pct">0%</span>
+        </div>
+        <div id="room-done" class="done-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 接收页 ═══════════ -->
+  <section id="view-receive" class="view hidden">
+    <header class="bar">
+      <button class="back" data-go="home" aria-label="返回">‹</button>
+      <h2>接收文件</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="recv-live">自动接收</button>
+      <button class="tab" data-tab="recv-room">点对点接收</button>
+    </div>
+
+    <!-- 自动接收 -->
+    <div id="recv-live" class="tab-panel">
+      <div class="status-line" id="recv-live-status">
+        <span class="dot"></span><span>正在连接，等待文件送达…</span>
+      </div>
+      <div class="devices-line">在线设备：<span id="recv-devices">-</span></div>
+      <div id="recv-live-files" class="recv-list"></div>
+    </div>
+
+    <!-- 点对点接收 -->
+    <div id="recv-room" class="tab-panel hidden">
+      <div class="room-join">
+        <input id="recv-room-code" inputmode="numeric" maxlength="4" placeholder="输入 4 位端口码">
+        <button id="recv-room-join" class="primary">加入接收</button>
+      </div>
+      <p class="panel-tip" id="recv-room-hint">向发送方获取 4 位端口码后输入，即可接收 TA 发送的文件。</p>
+      <div id="recv-room-files" class="recv-list"></div>
+    </div>
+  </section>
+
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
